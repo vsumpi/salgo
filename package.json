@@ -1,0 +1,27 @@
+{
+  "name": "salgo",
+  "version": "1.0.0",
+  "description": "Egy jelenleg privát saját fejlesztésű discord bot ami A és B(FIX) pont közötti autós utazások szervezését segíti. ## Backstory A OE-NIK levelező képzése Salgótarjáni kihelyezésben zajlik és mivel a többség Budapest és vagy környéki így jó páran autót használunk a közlekedésre. Ezeknek a szervezése a szerver szobákban elkavarodhat így jött az ihlet a salGO bot elkészítésére. ### Elnevezés Az elnevezés Salgótarján és az angol go (megy) szóbol tevődikössze játékosan, így egyszerre fejezi ki a célt és az akciót is. # Fejlesztő(k): @vsumpi Varga Zsombor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vsumpi/salgo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vsumpi/salgo/issues"
+  },
+  "homepage": "https://github.com/vsumpi/salgo#readme",
+  "dependencies": {
+    "discord.js": "^14.18.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.1"
+  }
+}
