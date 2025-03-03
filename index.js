@@ -1,39 +1,30 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
-const { token } = require('./config.json');
-const { db_user } = require('./config.json');
-const { db_password } = require('./config.json');
-
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = `mongodb+srv://${db_user}:${db_password}@salgo-db.irx0k.mongodb.net/?retryWrites=true&w=majority&appName=salgo-db`;
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const mongo_client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await mongo_client.connect();
-    // Send a ping to confirm a successful connection
-    await mongo_client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await mongo_client.close();
-  }
-}
-run().catch(console.dir);
-
+require("dotenv").config(); // Load .env file
+const { mongoose } = require("./db"); // Fix import
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
 client.commands = new Collection();
+
+(async () => {
+  try {
+    console.log(`⚙️ Connecting to MongoDB...`);
+    
+    mongoose.connection.once("open", async () => {
+      console.log("✅ Database connected!");
+      
+      console.log("⚙️ Starting Discord bot...");
+      client.login(process.env.TOKEN);
+    });
+
+  } catch (error) {
+    console.error("❌ Error:", error);
+    process.exit(1); // Stop execution if there's a fatal error
+  }
+})();
+
+// Load commands dynamically
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
@@ -51,8 +42,9 @@ for (const folder of commandFolders) {
 	}
 }
 
+// Event handlers
 client.once(Events.ClientReady, readyClient => {
-	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+	console.log(`✅ salGO started! Logged in as "${readyClient.user.tag}"`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
@@ -60,7 +52,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	const command = interaction.client.commands.get(interaction.commandName);
 
 	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
+		console.error(`⚠️ No command named "${interaction.commandName}" was found. Use <node ./deploy-commands.js> to sync with Discord.`);
 		return;
 	}
 
@@ -75,5 +67,3 @@ client.on(Events.InteractionCreate, async interaction => {
 		}
 	}
 });
-
-client.login(token);
