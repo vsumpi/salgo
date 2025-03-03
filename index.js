@@ -2,6 +2,34 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
 const { token } = require('./config.json');
+const { db_user } = require('./config.json');
+const { db_password } = require('./config.json');
+
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = `mongodb+srv://${db_user}:${db_password}@salgo-db.irx0k.mongodb.net/?retryWrites=true&w=majority&appName=salgo-db`;
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const mongo_client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await mongo_client.connect();
+    // Send a ping to confirm a successful connection
+    await mongo_client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await mongo_client.close();
+  }
+}
+run().catch(console.dir);
+
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
