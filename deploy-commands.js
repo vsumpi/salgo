@@ -6,7 +6,7 @@ const path = require("path");
 
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
-const token = process.env.TOKEN;
+const token = process.env.DC_TOKEN;
 
 const commands = [];
 const foldersPath = path.join(__dirname, 'commands');
